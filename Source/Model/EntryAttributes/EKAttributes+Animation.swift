@@ -51,10 +51,10 @@ public extension EKAttributes {
             /** The delay of the range animation */
             public var delay: TimeInterval
             
-            /** The start value of the range animation (e.g. alpha, scale) */
+            /** The start value of the range animation (e.g. alpha) */
             public var start: CGFloat
             
-            /** The end value of the range animation (e.g. alpha, scale) */
+            /** The end value of the range animation (e.g. alpha) */
             public var end: CGFloat
             
             /** The spring of the animation */
@@ -66,6 +66,29 @@ public extension EKAttributes {
                 self.end = end
                 self.delay = delay
                 self.duration = duration
+                self.spring = spring
+            }
+        }
+        
+        /** Describes an animation with transform */
+        public struct TransformAnimation: EKAnimation, Equatable {
+            
+            /** The duration of the transform animation */
+            public var duration: TimeInterval
+            
+            /** The delay of the transform animation */
+            public var delay: TimeInterval
+            
+            /** The spring of the animation */
+            public var spring: Spring?
+            
+            /** The value of the transform animation */
+            public var value: CGAffineTransform
+            
+            public init(value: CGAffineTransform, duration: TimeInterval, delay: TimeInterval = 0, spring: Spring? = nil) {
+                self.value = value
+                self.duration = duration
+                self.delay = delay
                 self.spring = spring
             }
         }
@@ -110,20 +133,20 @@ public extension EKAttributes {
         /** Translation animation prop */
         public var translate: Translate?
         
-        /** Scale animation prop */
-        public var scale: RangeAnimation?
-        
         /** Fade animation prop */
         public var fade: RangeAnimation?
+        
+        /** Transform animation prop */
+        public var transform: TransformAnimation?
         
         /** Does the animation contains translation */
         public var containsTranslation: Bool {
             return translate != nil
         }
         
-        /** Does the animation contains scale */
-        public var containsScale: Bool {
-            return scale != nil
+        /** Does the animation contains transform */
+        public var containsTransform: Bool {
+            return transform != nil
         }
         
         /** Does the animation contains fade */
@@ -133,17 +156,17 @@ public extension EKAttributes {
         
         /** Does the animation contains any animation whatsoever */
         public var containsAnimation: Bool {
-            return containsTranslation || containsScale || containsFade
+            return containsTranslation || containsTransform || containsFade
         }
         
         /** Returns the maximum delay amongst all animations */
         public var maxDelay: TimeInterval {
-            return max(translate?.delay ?? 0, max(scale?.delay ?? 0, fade?.delay ?? 0))
+            return max(translate?.delay ?? 0, max(transform?.delay ?? 0, fade?.delay ?? 0))
         }
         
         /** Returns the maximum duration amongst all animations */
         public var maxDuration: TimeInterval {
-            return max(translate?.duration ?? 0, max(scale?.duration ?? 0, fade?.duration ?? 0))
+            return max(translate?.duration ?? 0, max(transform?.duration ?? 0, fade?.duration ?? 0))
         }
         
         /** Returns the maximum (duration+delay) amongst all animations */
@@ -162,10 +185,10 @@ public extension EKAttributes {
         }
         
         /** Initializer */
-        public init(translate: Translate? = nil, scale: RangeAnimation? = nil, fade: RangeAnimation? = nil) {
+        public init(translate: Translate? = nil, fade: RangeAnimation? = nil, transform: TransformAnimation? = nil) {
             self.translate = translate
-            self.scale = scale
             self.fade = fade
+            self.transform = transform
         }
     }
 }

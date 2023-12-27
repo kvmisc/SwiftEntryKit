@@ -358,9 +358,9 @@ class EKContentView: UIView {
             }
         }
         
-        if let scale = animation.scale {
-            performAnimation(out: true, with: scale, preAction: { self.transform = CGAffineTransform(scaleX: scale.start, y: scale.start) }) {
-                self.transform = CGAffineTransform(scaleX: scale.end, y: scale.end)
+        if let transform = animation.transform {
+            performAnimation(out: true, with: transform, preAction: { self.transform = transform.value }) {
+                self.transform = .identity
             }
         }
 
@@ -393,9 +393,9 @@ class EKContentView: UIView {
             }
         }
         
-        if let scale = animation.scale {
-            performAnimation(out: false, with: scale, preAction: { self.transform = CGAffineTransform(scaleX: scale.start, y: scale.start) }) {
-                self.transform = CGAffineTransform(scaleX: scale.end, y: scale.end)
+        if let transform = animation.transform {
+            performAnimation(out: false, with: transform, preAction: { self.transform = transform.value }) {
+                self.transform = .identity
             }
         }
         
